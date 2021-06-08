@@ -2,6 +2,8 @@ import {ChangeEvent} from 'react';
 import {FilterValuesType, TaskType} from './App';
 import AddItemForm from './AddItemForm';
 import EditableSpan from './EditableSpan';
+import {Button, Checkbox, IconButton} from '@material-ui/core';
+import {Delete} from '@material-ui/icons';
 
 type PropsTodoListType = {
   todoListID: string
@@ -33,19 +35,25 @@ function TodoList(props: PropsTodoListType) {
 
     let taskClass = t.isDone ? 'is-done' : ''
     return (
-        <li key={t.id} className={taskClass}>
-          <input type="checkbox"
-                 checked={t.isDone}
-                 onChange={changeTaskStatus}
-          />
-          <EditableSpan title={t.title} changeTitle={changeTaskTitle}/>
-          <button onClick={removeTask}>X</button>
+        <li key={t.id}>
+          <span className={taskClass}>
+            <Checkbox
+                size={'small'}
+                color={'primary'}
+                checked={t.isDone}
+                onChange={changeTaskStatus}
+            />
+            <EditableSpan title={t.title} changeTitle={changeTaskTitle}/>
+          </span>
+          <IconButton onClick={removeTask} color={'secondary'}>
+            <Delete/>
+          </IconButton>
         </li>
     )
   })
 
   const changeTodoListTitle = (title: string) => props.changeTodoListTitle(title, props.todoListID)
-
+  const removeTodolist = () => props.removeTodoList(props.todoListID)
   const onClickSetAllFilter = () => props.changeTodoListFilter('all', props.todoListID)
   const onClickSetActiveFilter = () => props.changeTodoListFilter('active', props.todoListID)
   const onClickSetCompletedFilter = () => props.changeTodoListFilter('completed', props.todoListID)
@@ -54,22 +62,35 @@ function TodoList(props: PropsTodoListType) {
       <div>
         <h3>
           <EditableSpan title={props.title} changeTitle={changeTodoListTitle}/>
-          <button onClick={() => props.removeTodoList(props.todoListID)}>X</button>
+          <IconButton onClick={removeTodolist} color={'secondary'}>
+            <Delete/>
+          </IconButton>
         </h3>
         <AddItemForm addItem={addTask}/>
-        <ul>
+        <ul style={{listStyle: 'none', padding: 0}}>
           {tasksJSXElements}
         </ul>
         <div>
-          <button className={filter === 'all' ? 'active-filter' : ''}
-                  onClick={onClickSetAllFilter}>All
-          </button>
-          <button className={filter === 'active' ? 'active-filter' : ''}
-                  onClick={onClickSetActiveFilter}>Active
-          </button>
-          <button className={filter === 'completed' ? 'active-filter' : ''}
-                  onClick={onClickSetCompletedFilter}>Completed
-          </button>
+          <Button
+              variant={filter === 'all' ? 'contained' : 'outlined'}
+              color={'primary'}
+              size={'small'}
+              onClick={onClickSetAllFilter}>All
+          </Button>
+          <Button
+              style={{marginLeft: '3px'}}
+              variant={filter === 'active' ? 'contained' : 'outlined'}
+              color={'primary'}
+              size={'small'}
+              onClick={onClickSetActiveFilter}>Active
+          </Button>
+          <Button
+              style={{marginLeft: '3px'}}
+              variant={filter === 'completed' ? 'contained' : 'outlined'}
+              color={'primary'}
+              size={'small'}
+              onClick={onClickSetCompletedFilter}>Completed
+          </Button>
         </div>
       </div>
   )
