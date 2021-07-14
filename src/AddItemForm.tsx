@@ -1,4 +1,4 @@
-import {ChangeEvent, KeyboardEvent, useState} from 'react';
+import {ChangeEvent, KeyboardEvent, useState, memo} from 'react';
 import {AddBox} from '@material-ui/icons';
 import {IconButton, TextField} from '@material-ui/core';
 
@@ -6,12 +6,14 @@ type AddItemFormPropsType = {
   addItem: (title: string) => void
 }
 
-function AddItemForm(props: AddItemFormPropsType) {
+const AddItemForm = memo((props: AddItemFormPropsType) => {
   const [title, setTitle] = useState<string>('')
   const [error, setError] = useState<boolean>(false)
   const onChangeTitle = (e: ChangeEvent<HTMLInputElement>) => {
     setTitle(e.currentTarget.value)
-    setError(false)
+    if (error) {
+      setError(false)
+    }
   }
   const onClickAddItem = () => {
     const validatedTitle = title.trim()
@@ -44,6 +46,6 @@ function AddItemForm(props: AddItemFormPropsType) {
         </IconButton>
       </div>
   )
-}
+})
 
 export default AddItemForm
